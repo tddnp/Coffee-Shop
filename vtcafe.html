@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VTCafe</title>
+</head>
+<style>
+    img{
+        height: 100px;
+    }
+    table{
+        width: 50%;
+        float: left;
+    }
+</style>
+<body>
+<!--<button onclick="showMenu()">Tạo Menu</button>-->
+<button onclick="addDrink()">Add more drink</button>
+<button onclick="payOrder()">Payment</button>
+Revenue: <span id="revenue">0</span>
+<table border="1px" id="menu"></table>
+<table border="1px" id="order"></table>
+
+<script>
+    let drink1 = ['Lemon tea', 23, "https://baristaskills.com.vn/wp-content/uploads/2020/07/cach-lam-tra-chanh-truyen-thong.jpg"];
+    let drink2 = ['bubble tea', 30, "https://toplist.vn/images/800px/quan-tra-sua-ngon-va-chat-luong-nhat-quan-ha-dong-ha-noi-chu-de-da-co-nguoi-nhan-kieu-nguyen-344947.jpg"];
+    let drink3 = ['Milk coffee', 25, "https://vietblend.vn/wp-content/uploads/2018/12/cach-lam-cafe-sua-nong.jpg"];
+    let drink4 = ['Black coffee', 20, "https://trixie.com.vn/media/images/product/52637481/cafe-nau.jpg"];
+    let drink5 = ['Silver shun', 25, "https://cdn.huongnghiepaau.com/wp-content/uploads/2019/09/cach-pha-bac-xiu-3-tang.jpg"];
+
+    let revenue = 0; //Doanh Thu
+    let menu = [drink1, drink2, drink3, drink4, drink5];
+    let order = [];
+
+    function showMenu() {
+        let menuTxt = '';
+        for (let i = 0; i < menu.length; i++) {
+            menuTxt += '<tr>';
+            /*for (let j = 0; j < 3; j++) {
+                menuTxt += '<td>'+menu[i][j]+'</td>';
+            }*/
+            menuTxt += '<td>' + menu[i][0] + '</td>';
+            menuTxt += '<td>' + menu[i][1] + '</td>';
+            menuTxt += '<td><img src="' + menu[i][2] + '"></td>';
+            menuTxt += '<td><button onclick="orderDrink('+i+')">Pick</button></td>';
+            menuTxt += '<td><button onclick="updateDrink('+i+')">Edit</button></td>';
+            menuTxt += '<td><button onclick="deleteDrink('+i+')">Delete</button></td>';
+            menuTxt += '</tr>'
+        }
+        document.getElementById('menu').innerHTML = menuTxt;
+    }
+    showMenu();
+    
+    function orderDrink(index) {
+        let traChanh = menu[index];
+        order.unshift(traChanh);
+        showOrder();
+    }
+
+    function showOrder() {
+        let orderTxt = '';
+        for (let i = 0; i < order.length; i++) {
+            orderTxt += '<tr>';
+            orderTxt += '<td>' + order[i][0] + '</td>';
+            orderTxt += '<td>' + order[i][1] + '</td>';
+            orderTxt += '<td><img src="' + order[i][2] + '"></td>';
+            orderTxt += '<td><button onclick="deleteDrinkOfOrder('+i+')">X</button></td>';
+            orderTxt += '</tr>'
+        }
+        orderTxt += '<tr>' +
+            '<td>Total</td>' +
+            '<td>'+totalAmount()+'</td>' +
+            '</tr>';
+        document.getElementById('order').innerHTML = orderTxt;
+    }
+
+    function totalAmount() {
+        let total = 0;
+        for (let i = 0; i < order.length; i++) {
+            total += parseInt(order[i][1]);
+        }
+        return total;
+    }
+    
+    function deleteDrinkOfOrder(index) {
+        order.splice(index,1);
+        showOrder();
+    }
+
+    function payOrder() {
+        revenue += totalAmount();
+        document.getElementById('revenue').innerText = revenue;
+        alert("Approve!");
+        order = [];
+        showOrder();
+    }
+
+    function addDrink() {
+        let name = prompt('Tên đồ uống');
+        let price = prompt('Giá đồ uống');
+        let img = prompt('Ảnh đồ uống');
+        let drink = [name,price,img];
+        menu.push(drink);
+        console.log(menu);
+        showMenu();
+    }
+
+    function deleteDrink(index) {
+        menu.splice(index,1);
+        showMenu();
+    }
+
+    function updateDrink(index) {
+        menu[index][0] = prompt("Type the name of the drink",menu[index][0])
+        menu[index][1] = prompt("Type the price of the drink",menu[index][1])
+        menu[index][2] = prompt("New image",menu[index][2])
+        showMenu();
+    }
+</script>
+</body>
+</html>
